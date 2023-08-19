@@ -1,7 +1,7 @@
 import math
 import matplotlib.pyplot as plt
 
-
+# Function to extract the waypoints from the generated file
 def extract_waypoints_from_file(file_path):
     try:
         with open(file_path, 'r') as file:
@@ -18,7 +18,7 @@ def extract_waypoints_from_file(file_path):
     return(waypoints)
 
 
-
+# Function to generate another set of waypoints with the given "offset". Also plots the two set of waypoints
 def genrate_waypoints(waypoints,offset):
 
     offset_waypoints = []
