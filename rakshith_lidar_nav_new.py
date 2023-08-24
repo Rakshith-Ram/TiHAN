@@ -1,5 +1,5 @@
 
-############################################################  LIDAR NAVIGATION CODE FOR MAINI VEHICLE  ##############################################################
+#####################################################################  LIDAR NAVIGATION CODE FOR MAINI VEHICLE  #################################################################################
 
 
 
@@ -120,7 +120,6 @@ print("Current co-ordinates : ", current_x, ", ", current_y)
 while True:
 
     distance = math.sqrt((current_x - waypoints[wp][0]) ** 2 + (current_y - waypoints[wp][1]) ** 2)
-
     
     print("Current_x : ", current_x)
     print("Current_y : ", current_y)
