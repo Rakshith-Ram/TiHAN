@@ -1,6 +1,11 @@
 import math
 import matplotlib.pyplot as plt
 
+
+waypoints = []
+offset_waypoints = []
+
+
 # Function to extract the waypoints from the generated file
 def extract_waypoints_from_file(file_path):
     try:
@@ -17,11 +22,13 @@ def extract_waypoints_from_file(file_path):
         waypoints.append([x, y])
     return(waypoints)
 
+waypoints = extract_waypoints_from_file("/home/rakshith/waypoints/waypoints_testbed")       # put path of original waypoints here
+
 
 # Function to generate another set of waypoints with the given "offset". Also plots the two set of waypoints
 def genrate_waypoints(waypoints,offset):
 
-    offset_waypoints = []
+    global offset_waypoints
 
     for i in range(len(waypoints) - 1):
 
@@ -38,6 +45,10 @@ def genrate_waypoints(waypoints,offset):
         offset_point = [offset_x1, offset_y1]
         offset_waypoints.append(offset_point)
 
+
+# Function to plot original and generated waypoints
+def plot_both():
+
     x_values = [wp[0] for wp in waypoints]
     y_values = [wp[1] for wp in waypoints]
 
@@ -49,6 +60,18 @@ def genrate_waypoints(waypoints,offset):
     plt.show()
 
 
-waypoints = extract_waypoints_from_file("/home/rakshith/waypoints/waypoints_testbed")
+# Write the generated waypoints in a file
+def create_offset_waypoints_file():
+
+    file_path = 'offset_waypoints.txt'      #  File of this name will be created
+
+    with open(file_path, 'a') as file:
+        file.write(f"[{offset_point[0]},{offset_point[1]}]\n")
+
+
 
 genrate_waypoints(waypoints, 1)
+
+plot_both()
+
+create_offset_waypoints_file()
