@@ -8,6 +8,9 @@ offset_waypoints = []
 
 # Function to extract the waypoints from the generated file
 def extract_waypoints_from_file(file_path):
+
+    global waypoints
+
     try:
         with open(file_path, 'r') as file:
             file_contents = file.read()
@@ -20,9 +23,6 @@ def extract_waypoints_from_file(file_path):
     for line in waypoints_data:
         x, y = map(float, line.strip("[],").split(','))
         waypoints.append([x, y])
-    return(waypoints)
-
-waypoints = extract_waypoints_from_file("/home/rakshith/waypoints/waypoints_testbed")       # put path of original waypoints here
 
 
 # Function to generate another set of waypoints with the given "offset". Also plots the two set of waypoints
@@ -66,9 +66,12 @@ def create_offset_waypoints_file():
     file_path = 'offset_waypoints.txt'      #  File of this name will be created
 
     with open(file_path, 'a') as file:
-        file.write(f"[{offset_point[0]},{offset_point[1]}]\n")
+        for i in range(len(offset_waypoints) - 1):
+            file.write(f"[{offset_waypoints[i][0]},{offset_waypoints[i][1]}]\n")
 
 
+
+extract_waypoints_from_file("/home/rakshith/waypoints/waypoints_testbed")       # put path of original waypoints here
 
 genrate_waypoints(waypoints, 1)
 
