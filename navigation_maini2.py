@@ -257,3 +257,14 @@ while True:
     time.sleep(0.1)
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::#
+
+
+
+'''
+
+Created by Rakshith on 16-9-23
+Mods on V2:
+1. Seperate functions for publishing on ROS
+2. Added few more necessary print statements
+
+'''
