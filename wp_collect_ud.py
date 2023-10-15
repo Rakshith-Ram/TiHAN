@@ -1,4 +1,4 @@
-
+##################################  COLLECT WAYPOINTS AT UNIFORM DISTANCE  ##################################
 
 import rospy
 import math
