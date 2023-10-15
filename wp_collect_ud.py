@@ -50,8 +50,8 @@ while not rospy.is_shutdown():
     # Clear the waypoint for the next round
     waypoint = None
 
-
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::#
+
 
 '''
 Created by Rakshith on 16-9-23
