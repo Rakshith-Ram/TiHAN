@@ -6,7 +6,7 @@ from geometry_msgs.msg import PoseStamped
 
 
 def callback(data):
-    global waypoint, file_path
+    global waypoint
     
     # Extract x and y coordinates from the PoseStamped message
     x = data.pose.position.x
