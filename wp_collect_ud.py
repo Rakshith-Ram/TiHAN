@@ -1,4 +1,4 @@
-#####################################  COLLECT WAYPOINTS AT UNIFORM DISTANCE  #####################################
+##################################  COLLECT WAYPOINTS AT UNIFORM DISTANCE INTERVAL  ##################################
 
 import rospy
 import math
@@ -28,6 +28,7 @@ rospy.init_node('waypoint_collector', anonymous=True)
 
 waypoint = None
 
+# Path and name of the file where the waypoints are stored
 file_path = 'waypoints_unf_dis.txt'
 
 # Subscribe to the topic
@@ -44,6 +45,7 @@ while not rospy.is_shutdown():
     d = calc_distance(past_wp, waypoint)
     if d is not None and d >= set_distance:
         past_wp = waypoint
+        # Write the waypoint into the file
         with open(file_path, 'a') as file:
             file.write(f"[{waypoint[0]},{waypoint[1]}],\n")
 
