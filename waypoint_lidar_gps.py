@@ -54,7 +54,6 @@ def calc_distance(past_wp, waypoint):
 # Distace after which each waypoint has to be collected
 set_distance = 1.5
 
-
 # Initialize ROS node
 rospy.init_node('waypoint_collector', anonymous=True)
 
