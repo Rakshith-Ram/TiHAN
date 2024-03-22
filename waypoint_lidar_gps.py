@@ -41,7 +41,7 @@ def callback(data):
     q4 = data.pose.orientation.w
 
     # Update the current waypoint
-    waypoint = [round(x,6), round(y,6), round(z,6), round(q1,6), round(q2,6), round(q3,6), round(q4,6)]
+    waypoint = [round(x,4), round(y,4), round(z,4), round(q1,4), round(q2,4), round(q3,4), round(q4,4)]
 
 
 def calc_distance(past_wp, waypoint):
@@ -83,8 +83,9 @@ while not rospy.is_shutdown():
         with open(file_path, 'a') as file:
             file.write(f"[{waypoint[0]},{waypoint[1]},{waypoint[2]},{waypoint[3]},{waypoint[4]},{waypoint[5]},{waypoint[6]},{coord[0]},{coord[1]}],\n")
 
-    # Clear the waypoint for the next round
+    # Clear the waypoint and coord for the next round
     waypoint = None
+    coord = None
 
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::#
