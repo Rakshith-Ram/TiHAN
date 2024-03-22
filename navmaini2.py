@@ -194,7 +194,6 @@ def publish_velocity(velocity_value_data):
 
 
 
-
 while True:
 
     distance = math.sqrt((current_x - waypoints[wp][0]) ** 2 + (current_y - waypoints[wp][1]) ** 2)
@@ -256,8 +255,6 @@ while True:
     time.sleep(0.1)
 
 #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::#
-
-
 
 
 '''
