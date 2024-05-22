@@ -227,11 +227,17 @@ while True:
 
         calc_control_effort()
         velocity_value = calc_velocity()
-        
-        # Stop slow
-        if wp>58:  
+
+
+        # SPEED BUMPS
+        if wp>20 and wp<25:  
+            velocity_value=min(40,velocity_value)
+            
+        # Slow STOP
+        if wp>60:  
             velocity_value=min(40,velocity_value)
 
+        # Intermediate STOP
         if wp==45:
             velocity_value=0
             control_effort=0
