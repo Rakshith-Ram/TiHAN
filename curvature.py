@@ -1,16 +1,15 @@
-#########################################  WAYPOINT CURVATURE  ##########################################
-
+###########################################  WAYPOINT CURVATURE  ############################################
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Read waypoints from file
 waypoints = []
 curvatures = []
 
-output_path = "/home/rakshithram/speed_profiling/waypoints_with_curvature.txt"
+input_path = "interpolated_2.txt"
+output_path = "waypoints_with_curvature.txt"
 
-with open("/home/rakshithram/speed_profiling/interpolated_waypoints.txt", "r") as file:
+with open(input_path, "r") as file:
     for line in file:
         line = line.strip().strip("[],")
         if line:
@@ -19,17 +18,34 @@ with open("/home/rakshithram/speed_profiling/interpolated_waypoints.txt", "r") a
 
 waypoints = np.array(waypoints)
 
-# === Step 2: Compute Curvature ===
-def compute_curvature_avg_future(waypoints, window):
+
+# ------------ Compute Curvature using Triangle-Based Method ------------
+
+def compute_curvature_triangle_based(waypoints, window):
     curvatures = []
 
-    def single_curvature(p1, p2, p3):
-        tangent1 = p2 - p1
-        tangent2 = p3 - p2
-        cross_product = tangent1[0] * tangent2[1] - tangent1[1] * tangent2[0]
-        if cross_product == 0:
-            return 0
-        return abs(cross_product / (np.linalg.norm(tangent1) * np.linalg.norm(tangent2)))
+    def triangle_curvature(p1, p2, p3):
+        # Side lengths
+        a = np.linalg.norm(p2 - p3)
+        b = np.linalg.norm(p1 - p3)
+        c = np.linalg.norm(p1 - p2)
+
+        # Semi-perimeter
+        s = (a + b + c) / 2.0
+
+        # Heron's formula for area
+        area_term = s * (s - a) * (s - b) * (s - c)
+        if area_term <= 0:
+            return 0.0
+
+        area = np.sqrt(area_term)
+
+        # Curvature kappa = 4 * Area / (abc)
+        if a * b * c == 0:
+            return 0.0
+
+        curvature = (4.0 * area) / (a * b * c)
+        return curvature
 
     for i in range(len(waypoints) - 2):
         curv_sum = 0
@@ -38,21 +54,22 @@ def compute_curvature_avg_future(waypoints, window):
             p1 = waypoints[j]
             p2 = waypoints[j + 1]
             p3 = waypoints[j + 2]
-            curv_sum += single_curvature(p1, p2, p3)
+            curv_sum += triangle_curvature(p1, p2, p3)
             count += 1
         avg_curv = curv_sum / count if count > 0 else 0
         curvatures.append(avg_curv)
 
     return curvatures
 
-curvatures = compute_curvature_avg_future(waypoints, window=20)
+curvatures = compute_curvature_triangle_based(waypoints, window=20)
 
-# === Step 3: Plot Path and Curvature Vectors ===
+
+# ------------ Plot Path and Curvature Vectors ------------
+
 fig1, ax = plt.subplots(figsize=(10, 6))
 
 label_added = False
 
-# Draw perpendicular lines based on curvature
 for i in range(1, len(waypoints) - 1):
     if i >= len(curvatures):
         continue
@@ -66,16 +83,11 @@ for i in range(1, len(waypoints) - 1):
     normal = np.array([-tangent_norm[1], tangent_norm[0]])
 
     scale = 50
-    offset = normal * np.sign(curvatures[i]) * curvatures[i] * scale
+    offset = normal * curvatures[i] * scale
     print(f"Curvature at point {i}: {curvatures[i]}")
 
     start = p_curr
-    if curvatures[i] > 0:
-        end = p_curr - offset
-    elif curvatures[i] < 0:
-        end = p_curr + offset
-    else:
-        continue
+    end = p_curr + offset if curvatures[i] > 0 else p_curr - offset
 
     if not label_added:
         ax.plot([start[0], end[0]], [start[1], end[1]], color='red', linewidth=1.5, label='Curvature vector')
@@ -83,15 +95,12 @@ for i in range(1, len(waypoints) - 1):
     else:
         ax.plot([start[0], end[0]], [start[1], end[1]], color='red', linewidth=1.5)
 
-
-
 with open(output_path, "w") as f:
     for i in range(len(curvatures)):
         x, y = waypoints[i + 1]  # Shifted by +1 because curvature starts from index 1
         curvature = curvatures[i]
         f.write(f"[{x:.4f},{y:.4f},{curvature:.6f}],\n")
 
-    
 ax.scatter(waypoints[:, 0], waypoints[:, 1], color='blue', s=7, label='Waypoints')
 ax.set_title("Waypoints with Perpendicular Vectors Representing Curvature")
 ax.set_xlabel("X")
@@ -100,10 +109,12 @@ ax.axis('equal')
 ax.grid(True)
 ax.legend()
 plt.tight_layout()
-plt.show(block=False)   # <-- Don't block here
-plt.pause(0.1)          # <-- Let this figure render
+plt.show(block=False)
+plt.pause(0.1)
 
-# === Step 4: Plot Curvature vs Waypoint Index ===
+
+# ------------ Plot Curvature vs Waypoint Index ------------
+
 fig2 = plt.figure(figsize=(10, 4))
 plt.plot(range(len(curvatures)), curvatures, marker='.', linestyle='-', color='green')
 plt.title("Waypoint Index vs. Curvature")
@@ -111,9 +122,8 @@ plt.xlabel("Waypoint Index")
 plt.ylabel("Curvature")
 plt.grid(True)
 plt.tight_layout()
-plt.show(block=False)   # <-- Show second window non-blocking
+plt.show(block=False)
 plt.pause(0.1)
-
 
 while plt.get_fignums():
     plt.pause(0.1)
@@ -121,7 +131,6 @@ while plt.get_fignums():
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::#
 
-
 '''
-Rakshith Ram [30-05-25]
+Rakshith Ram [11-06-25]
 '''
